@@ -1,0 +1,41 @@
+name: Configuration
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - Configuration/**
+  pull_request:
+    branches:
+      - master
+    paths:
+      - Configuration/**
+
+jobs:
+  ScanValidateConfigurations:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: Configuration
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      -   name: Run Analysis
+          uses: codescan-io/codescan-scanner-action@master
+          with:
+            login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
+            organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
+            projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
+            args: |
+              sonar.verbose=true
+              sonar.java.binaries=target
+      - name: Kubeval
+        uses: instrumenta/kubeval-action@master
+        with:
+          files: Configuration
