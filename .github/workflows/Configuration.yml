@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - master
-    paths:
-      - Configuration/**
   pull_request:
     branches:
       - master
-    paths:
-      - Configuration/**
 
 jobs:
   ScanValidateConfigurations:
@@ -18,7 +14,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: Configuration
     permissions:
       contents: read
       security-events: write
